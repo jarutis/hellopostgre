@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS phonebook (id SERIAL, name TEXT, phone VARCHAR(50));

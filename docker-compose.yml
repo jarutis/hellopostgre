@@ -1,0 +1,32 @@
+version: '2.2'
+
+services:
+  api:
+    build: .
+    environment:
+      DATABASE_URI: "postgresql://${DB_USER}:${DB_PW}@db/${DB_NAME}"
+    networks:
+      - default
+    ports:
+      - 5000:5000
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    environment:
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PW}"
+      POSTGRES_DB: "${DB_NAME}"
+    image: postgres:alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5405:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
