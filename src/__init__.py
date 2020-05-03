@@ -23,7 +23,7 @@ def create():
     return jsonify(record), 201
 
 
-@app.route("/books", methods=["GET"])
+@app.route("/book/entries", methods=["GET"])
 def read_all():
     with conn.cursor(cursor_factory = RealDictCursor) as cursor:
         sql = "SELECT id, name, phone FROM phonebook"
